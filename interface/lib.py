@@ -27,7 +27,25 @@ SMD_SOLVENT = 'METHANOL'
 # Get Full Path of an system executable 
 
 def which(program):
+    """
+    Find the path of an executable program.
+
+    Parameters:
+        program (str): The name of the program or executable file.
+
+    Returns:
+        str: The full path to the executable if found, None otherwise.
+    """
     def is_exe(exec_path):
+        """
+        Check if a given file path is an executable.
+
+        Parameters:
+            exec_path (str): The file path to check.
+
+        Returns:
+            bool: True if the file is executable, False otherwise.
+        """
         return os.path.isfile(exec_path) and os.access(exec_path, os.X_OK)
 
     file_path, file_name = os.path.split(program)
@@ -41,6 +59,19 @@ def which(program):
                 return exe_file
 
 def orca_neb_inp(start_xyz, end_xyz):
+    """
+    Generate an ORCA input file for performing a NEB (Nudged Elastic Band) calculation.
+
+    Parameters:
+        start_xyz (str): File path to the starting structure in XYZ format.
+        end_xyz (str): File path to the ending structure in XYZ format.
+
+    Writes:
+        Creates a new file 'neb.inp' with the generated ORCA input.
+
+    Returns:
+        None
+    """
     with open('neb.inp', 'w') as nebfile:
         nebfile.writelines(f'!NEB-TS Opt {DFT_METHOD} {BASIS_SET} {O_PARAMS}' + '\n')
         nebfile.writelines('%scf' + '\n')
@@ -60,6 +91,18 @@ def orca_neb_inp(start_xyz, end_xyz):
         nebfile.writelines(f'* xyzfile {CHARGE} {SPIN} {start_xyz}'+'\n')
 
 def orca_opt_freq_inp(xyz_file):
+    """
+    Generate an ORCA input file for performing geometry optimization and frequency calculation.
+
+    Parameters:
+        xyz_file (str): File path to the structure in XYZ format.
+
+    Writes:
+        Creates a new file 'opt.inp' with the generated ORCA input.
+
+    Returns:
+        None
+    """
     with open('opt.inp', 'w') as optfile:
         optfile.writelines(f'!Opt NumFreq {DFT_METHOD} {H_BASIS_SET} {O_PARAMS}' + '\n')
         optfile.writelines('%scf' + '\n')
@@ -72,6 +115,19 @@ def orca_opt_freq_inp(xyz_file):
         optfile.writelines(f'* xyzfile {CHARGE} {SPIN} {xyz_file}'+'\n')
 
 def orca_opt_inp(xyz_file):
+    """
+    Generate an ORCA input file for performing geometry optimization.
+
+    Parameters:
+        xyz_file (str): File path to the structure in XYZ format.
+
+    Writes:
+        Creates a new file 'opt.inp' with the generated ORCA input.
+
+    Returns:
+        None
+    """
+
     with open('opt.inp', 'w') as optfile:
         optfile.writelines(f'!Opt {DFT_METHOD} {BASIS_SET} {O_PARAMS}' + '\n')
         optfile.writelines('%scf' + '\n')
@@ -86,6 +142,18 @@ def orca_opt_inp(xyz_file):
 
 
 def xtbscan_split(scan_log_file):
+    """
+    Split an XTB Scan log file into separate start and end XYZ files.
+
+    Parameters:
+        scan_log_file (str): File path to the XTBScan log file.
+
+    Writes:
+        Creates two new files: 'end.xyz' and 'start.xyz' with the extracted data.
+
+    Returns:
+        None
+    """
     with open(scan_log_file, 'r') as fp:
         l = fp.readlines()
         number_of_atoms = int(l[0])
@@ -98,6 +166,19 @@ def xtbscan_split(scan_log_file):
 
 
 def orca_ts_irc_inp(active_atoms_dict, xyz_file):
+    """
+    Generate an ORCA input file for performing Transition State (TS) optimization and IRC (Intrinsic Reaction Coordinate) calculation.
+
+    Parameters:
+        active_atoms_dict (str): A dictionary specifying the active atoms for TS optimization and IRC.
+        xyz_file (str): File path to the structure in XYZ format.
+
+    Writes:
+        Creates a new file 'ts.inp' with the generated ORCA input.
+
+    Returns:
+        None
+    """
     with open('ts.inp', 'w') as tsfile:
         tsfile.writelines(f'! OptTS NumFreq {DFT_METHOD} {H_BASIS_SET} {O_PARAMS}' + '\n')
         tsfile.writelines('%scf' + '\n')
@@ -123,6 +204,17 @@ def orca_ts_irc_inp(active_atoms_dict, xyz_file):
 
 
 def get_dist(xyz_file, atom1, atom2):
+    """
+    Calculate the Euclidean distance between two atoms in an XYZ file.
+
+    Parameters:
+        xyz_file (str): File path to the structure in XYZ format.
+        atom1 (int): Index of the first atom.
+        atom2 (int): Index of the second atom.
+
+    Returns:
+        float: The Euclidean distance between the two atoms.
+    """
     with open(xyz_file, 'r') as xyzfile:
         lines = xyzfile.readlines()[2:]
     fp = lines[atom1].split()[1:]
@@ -133,6 +225,16 @@ def get_dist(xyz_file, atom1, atom2):
 
 
 def crest_run(xyzfile, output):
+    """
+    Run CREST with the specified XYZ file as input and save the output to a file.
+
+    Parameters:
+        xyzfile (str): File path to the input structure in XYZ format.
+        output (str): File path to save the CREST output.
+
+    Returns:
+        None
+    """
     crest_path = which('crest')
     # crest xyzfile -opt vtight -gfn2 -T procs
     with open(output, 'w') as ouputfile:
@@ -148,6 +250,18 @@ def crest_run(xyzfile, output):
 
 
 def crest_conf_split():
+    """
+    Split the CREST conformers XYZ file into separate XYZ files for each conformer.
+
+    Parameters:
+        None
+
+    Writes:
+        Creates multiple new files: 'conf1.xyz', 'conf2.xyz', ..., 'confN.xyz' with the splitted conformers.
+
+    Returns:
+        None
+    """
     with open('crest_conformers.xyz', 'r') as fp:
         l = fp.readlines()
         number_of_atoms = int(l[0])
@@ -169,11 +283,20 @@ def crest_conf_all_split():
             with open('conf' + str(j) + '.xyz', 'w') as new_file:
                 new_file.writelines(l[i:i+number_of_atoms+2])
             j = j + 1
-            # if j == BLOCKS:
-            #     break
     print('Conformers are splitted')
 
 def orca_scan_inp(xyz_file, atom1, atom2):
+    """
+    Generate an ORCA input file for performing a bond scan.
+
+    Parameters:
+        xyz_file (str): File path to the input structure in XYZ format.
+        atom1 (int): Index of the first atom involved in the bond scan.
+        atom2 (int): Index of the second atom involved in the bond scan.
+
+    Returns:
+        None
+    """
     initial_distance = get_dist(xyz_file, atom1, atom2)
     with open('scan.inp', 'w') as scanfile:
         scanfile.writelines(f'!Opt {DFT_METHOD} {BASIS_SET} {O_PARAMS}' + '\n')
@@ -191,6 +314,19 @@ def orca_scan_inp(xyz_file, atom1, atom2):
         scanfile.writelines(f'* xyzfile {CHARGE} {SPIN} {xyz_file}'+'\n')
 
 def orca_scan_constrain_inp(xyz_file, atom1, atom2, constrain=None):
+    """
+    Generate an ORCA input file for performing a constrained bond scan.
+
+    Parameters:
+        xyz_file (str): File path to the input structure in XYZ format.
+        atom1 (int): Index of the first atom involved in the bond scan.
+        atom2 (int): Index of the second atom involved in the bond scan.
+        constrain (list, optional): List of constraint strings for constraining specific coordinates during the scan.
+                                   Default is None.
+
+    Returns:
+        None
+    """
     initial_distance = get_dist(xyz_file, atom1, atom2)
     with open('scan.inp', 'w') as scanfile:
         scanfile.writelines(f'!Opt {DFT_METHOD} {BASIS_SET} {O_PARAMS}' + '\n')
@@ -215,6 +351,15 @@ def orca_scan_constrain_inp(xyz_file, atom1, atom2, constrain=None):
         scanfile.writelines(f'* xyzfile {CHARGE} {SPIN} {xyz_file}'+'\n')
 
 def orca_smd_inp(xyz_file):
+    """
+    Generate an ORCA input file for performing a calculation with SMD solvation model.
+
+    Parameters:
+        xyz_file (str): File path to the input structure in XYZ format.
+
+    Returns:
+        None
+    """
     with open('smd.inp', 'w') as optfile:
         optfile.writelines(f'!{SMD_DFT_METHOD} {SMD_BASIS_SET} {SMD_O_PARAMS}' + '\n')
         optfile.writelines('!CPCM' + '\n')
@@ -234,6 +379,17 @@ def orca_smd_inp(xyz_file):
 
 
 def orca_run(inp_file, output, jobname):
+    """
+    Run an ORCA job using the specified input file.
+
+    Parameters:
+        inp_file (str): File path to the ORCA input file.
+        output (str): File path to the output file for storing the ORCA job output.
+        jobname (str): Name of the ORCA job.
+
+    Returns:
+        None
+    """
     with open(output, 'w') as orca_output:
         run_job = subp.Popen([which('orca'), inp_file], stdout=orca_output)
     run_job.communicate()
@@ -248,6 +404,16 @@ def orca_run(inp_file, output, jobname):
 
 
 def slurm_input(inp_file, jobname):
+    """
+    Generate a SLURM input script for submitting a job.
+
+    Parameters:
+        inp_file (str): File path to the input file required by the job.
+        jobname (str): Name of the job.
+
+    Returns:
+        None
+    """
     with open(inp_file, 'w') as slurm_file:
         slurm_file.writelines('#!/bin/bash' + '\n')
         slurm_file.writelines(f'#SBATCH -J {jobname}'+'\n')
