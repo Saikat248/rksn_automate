@@ -53,6 +53,10 @@ The `start.py` file first do the conformation search using CREST and XTB. This s
 generate a `path.txt` file which will be submitted later automatically for parallel run of the 
 all conformers. 
 
+The DFT methods and settings for ORCA runs are provided at the beginning of the [lib.py](https://github.com/Saikat248/rksn_automate/blob/master/interface/lib.py) file. The SMD single point methods are also present. You can set up your preferred DFT Functional and basis set here.
+Change `PROCS` variable for setting up the number of ORCA parallel processors. The `BLOCKS` variable determines how many low energy conformers will be taken from the crest conformer search file for the reaction path study.
+
+
 # Contact
 
 For any inquiries or questions regarding the code or research paper, please contact saikat403@gamil.com.
