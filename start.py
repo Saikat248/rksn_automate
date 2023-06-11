@@ -6,8 +6,6 @@ import time
 from interface.lib import *
 
 
-# cwd = os.getcwd()
-# pdt_complex = 'start.xyz'
 
 # XTB Conformer search
 

@@ -4,9 +4,15 @@ import shutil
 from interface.lib import * 
 import time
 
+
 """
-Need to export this PYTHONPATH before running 
-export PYTHONPATH="full-directory-path/rksn_automate":$PYTHONPATH
+This code provides an automated workflow for performing reaction kinetics and solvation calculations using the ORCA software package. It includes the following steps:
+
+1. Initial Crude Optimization
+2. SCAN Calculation
+3. NEB Calculation
+4. TS Optimization and IRC
+5. SMD Solvation Calculations
 """
 
 cpu_st = time.process_time()
@@ -14,7 +20,6 @@ wall_st = time.time()
 
 cwd = os.getcwd()
 
-# Finding Active Atom from rule.txt file 
 
 with open('act_atom.txt', 'r') as fp:
     lines = fp.readlines()

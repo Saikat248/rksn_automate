@@ -22,6 +22,7 @@ Without Anaconda the automation script should run fine but need to change couple
 
 
 # Contact
+
 For any inquiries or questions regarding the code or research paper, please contact saikat403@gamil.com.
 
 
