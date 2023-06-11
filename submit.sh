@@ -20,7 +20,7 @@ export PYTHONPATH=/home/18cy91r30/autore2/interface:$PYTHONPATH
 echo $PYTHONPATH >> env.log
 which python3 >> env.log
 
-python3 -u ~/autore2/start.py -m start.xyz -r act_atom.txt > autore.log
+python3 -u ~/rksn_automate/start.py -m start.xyz -r act_atom.txt > autore.log
 bash path.txt
 
 

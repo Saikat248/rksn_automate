@@ -20,6 +20,11 @@ Without Anaconda the automation script should run fine but need to change couple
 
 # Installation
 
+Clone the `rksn_automate` repository.
+Then set the absolute path in [https://github.com/Saikat248/rksn_automate/blob/master/interface/lib.py](lib.py) `def slurm_input(inp_file, jobname)` function.
+This code runs in the SLURM  queuing system.
+A slurm submit script `submit.sh` is provided. Please change the file accordingly. 
+
 
 # Contact
 
