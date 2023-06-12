@@ -40,6 +40,8 @@ The run command is provided inside the `submit.sh` file.
 ```bash
 python3 -u ~/rksn_automate/start.py -m start.xyz -r act_atom.txt > output.log
 ```
+where `rksn_automate` repo is cloned in the $HOME directory of the user.
+
 
 The run command required a `act_atom.txt` file and an optional `constrain` file.
 Samples for the files are provided in the repository.
